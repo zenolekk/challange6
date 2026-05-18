@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>Frontend Mentor | Contact form</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Karla:wght@400;700&display=swap" rel="stylesheet">
+
+
+</head>
+<body>
+
+  <div class="toast-container" id="successToast">
+    <div class="toast-title">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      Message Sent!
+    </div>
+    <div class="toast-body">
+      Thanks for completing the form. We'll be in touch soon!
+    </div>
+  </div>
+
+  <main class="card">
+    <h1>Contact Us</h1>
+
+    <form id="contactForm" novalidate>
+      
+      <div class="row">
+        <div class="form-group" id="firstNameGroup">
+          <label for="firstName">First Name <span class="asterisk">*</span></label>
+          <input type="text" id="firstName" name="firstName">
+          <span class="error-msg">This field is required</span>
+        </div>
+
+        <div class="form-group" id="lastNameGroup">
+          <label for="lastName">Last Name <span class="asterisk">*</span></label>
+          <input type="text" id="lastName" name="lastName">
+          <span class="error-msg">This field is required</span>
+        </div>
+      </div>
+
+      <div class="form-group" id="emailGroup">
+        <label for="email">Email Address <span class="asterisk">*</span></label>
+        <input type="email" id="email" name="email">
+        <span class="error-msg" id="emailErrorMsg">Please enter a valid email address</span>
+      </div>
+
+      <div class="form-group" id="queryGroup">
+        <label>Query Type <span class="asterisk">*</span></label>
+        <div class="row" style="margin-bottom: 0; gap: 1.5rem;">
+          <label class="radio-box">
+            <input type="radio" name="queryType" value="General Enquiry">
+            <span>General Enquiry</span>
+          </label>
+          <label class="radio-box">
+            <input type="radio" name="queryType" value="Support Request">
+            <span>Support Request</span>
+          </label>
+        </div>
+        <span class="error-msg">Please select a query type</span>
+      </div>
+
+      <div class="form-group" id="messageGroup">
+        <label for="message">Message <span class="asterisk">*</span></label>
+        <textarea id="message" name="message"></textarea>
+        <span class="error-msg">This field is required</span>
+      </div>
+
+      <div class="form-group" id="consentGroup" style="margin-bottom: 2rem;">
+        <label class="consent-group" style="margin-bottom: 0; cursor: pointer;">
+          <input type="checkbox" id="consent" name="consent">
+          <span>I consent to being contacted by the team <span class="asterisk">*</span></span>
+        </label>
+        <span class="error-msg">To submit this form, please consent to being contacted</span>
+      </div>
+
+      <button type="submit">Submit</button>
+
+    </form>
+  </main>
+
+  <script>
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      let isValid = true;
+      
+      const firstName = document.getElementById('firstName');
+      const lastName = document.getElementById('lastName');
+      const email = document.getElementById('email');
+      const queryTypes = document.getElementsByName('queryType');
+      const message = document.getElementById('message');
+      const consent = document.getElementById('consent');
+      
+      document.querySelectorAll('.form-group').forEach(group => {
+        group.classList.remove('error');
+      });
+
+      const showError = (elementId) => {
+        document.getElementById(elementId).classList.add('error');
+        isValid = false;
+      };
+
+      if (!firstName.value.trim()) showError('firstNameGroup');
+      if (!lastName.value.trim()) showError('lastNameGroup');
+      
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!email.value.trim()) {
+        document.getElementById('emailErrorMsg').innerText = "This field is required";
+        showError('emailGroup');
+      } else if (!emailRegex.test(email.value)) {
+        document.getElementById('emailErrorMsg').innerText = "Please enter a valid email address";
+        showError('emailGroup');
+      }
+
+      const isQuerySelected = Array.from(queryTypes).some(radio => radio.checked);
+      if (!isQuerySelected) showError('queryGroup');
+
+      if (!message.value.trim()) showError('messageGroup');
+
+      if (!consent.checked) showError('consentGroup');
+
+      if (isValid) {
+        const toast = document.getElementById('successToast');
+        toast.classList.add('show');
+        
+        this.reset();
+        
+        setTimeout(() => {
+          toast.classList.remove('show');
+        }, 4000);
+      }
+    });
+  </script>
+</body>
+</html>
